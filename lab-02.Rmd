@@ -28,10 +28,9 @@ View(plastic_waste)
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Did you expect this result? You might consider doing some research on Trinidad and Tobago to see why plastic waste per capita is so high there, or whether this is a data error.
+#Trinidad and Tobago import tons of plastic every year, so it makes sense and it's not data error. 
 
-What can you say about how the continents compare to each other in terms of their plastic waste per capita?
+#It looks like many African countries have less plastic waste per capita, one or maybe a few North American countries have a lot plastic waste per capita
 
 ```{r plastic-waste-continent}
 ggplot(data = plastic_waste, aes(x = plastic_waste_per_cap)) +
@@ -42,6 +41,11 @@ plastic_waste %>%
 
 ggplot(data = plastic_waste, 
        mapping = aes(x = plastic_waste_per_cap, 
+                     color = continent)) +
+  geom_density()
+
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
                      color = continent, 
                      fill = continent)) +
   geom_density(alpha = 0.7)
@@ -49,16 +53,15 @@ ggplot(data = plastic_waste,
 
 ### Exercise 2
 
-#Describe why we defined the color and fill of the curves by mapping aesthetics of the plot but we defined the alpha level as a characteristic of the plotting geom.
-###It looks like color and fill just automatically choose colors for different continents, and alpha controls the density of the graph
+
+###It looks like color and fill just automatically choose colors for different continents. Color will color the dots/lines (if there are any). Fill just fills the colors in the graph. and alpha controls the density of the graph
 
 
 ```{r plastic-waste-density}
 
 ggplot(data = plastic_waste, 
        mapping = aes(x = plastic_waste_per_cap, 
-                     color = continent, 
-                     fill = continent)) +
+                     color = continent, fill = continent)) +
   geom_density(alpha = 0.2)
 
 ggplot(data = plastic_waste, 
@@ -70,68 +73,110 @@ ggplot(data = plastic_waste,
 
 ### Exercise 3
 
-Remove this text, and add your answer for Exercise 3 here.
+What do the violin plots reveal that box plots do not?
+#Violin plots also show density and data distribution (e.g., normality)
+
+What features are apparent in the box plots but not in the violin plots?
+#the medians. 
+
+```{r plastic-waste-violin}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = continent, 
+                     y = plastic_waste_per_cap)) +
+  geom_violin()
+```
 
 ### Exercise 4
 
-Remove this text, and add your answer for Exercise 4 here.
 
-```{r plastic-waste-violin}
-# insert code here
+```{r}
+
+
+plastic_waste %>%
+  summarize(cor(plastic_waste_per_cap, total_pop))
+
+
+
 ```
+
+
 
 ### Exercise 5
 
-Remove this text, and add your answer for Exercise 5 here.
 
 ```{r plastic-waste-mismanaged}
-# insert code here
+
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     y = mismanaged_plastic_waste_per_cap)) +
+  geom_point()
+
 ```
 
 ### Exercise 6
 
-Remove this text, and add your answer for Exercise 6 here.
+#it looks like a weak positive relationship and it looks like Oceania has less plastic waste per capita but they mismanage plastic waste more. Europe did the best in terms of mismanage plastic waste. 
 
 ```{r plastic-waste-mismanaged-continent}
-# insert code here
+
+
+
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     y = mismanaged_plastic_waste_per_cap,
+                     color = continent)) +
+  geom_point()
+
 ```
 
 ### Exercise 7
 
-Remove this text, and add your answer for Exercise 7 here.
-
+#They don't seem to be more strongly linearly associated compare to the previous graph
 ```{r plastic-waste-population-total}
-# insert code here
+
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     y = total_pop,
+                     color = continent)) +
+  geom_point()
+
 ```
 
 ```{r plastic-waste-population-coastal}
-# insert code here
+
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     y = coastal_pop,
+                     color = continent)) +
+  geom_point()
+
+
 ```
 
 ### Exercise 8
 
-Remove this text, and add your answer for Exercise 8 here.
-
+#I think it's identical except for the color
 ```{r recreate-viz}
-# insert code here
-```
 
-## Pro-Tips
+library(ggsci)
+plastic_waste_f <- plastic_waste %>% 
+  filter(plastic_waste_per_cap < 3)
 
-### Excercise 3
+plastic_waste_f$Coastal_pop_pro <- plastic_waste_f$coastal_pop/plastic_waste_f$total_pop
 
-Try this :D
-
-ggplot(data = plastic_waste, 
-       mapping = aes(x = continent, 
+ggplot(data = plastic_waste_f, 
+       mapping = aes(x = Coastal_pop_pro, 
                      y = plastic_waste_per_cap)) +
-  geom_violin()+
-  geom_boxplot(width=.3, fill="green") +
-  stat_summary(fun.y=median, geom="point") 
-  
-### Exercise 5 
+  ggtitle("Plastic waste vs. coastal population proportion", "by continent") + 
+  xlab("Coastal population proportion (Coastal / total population)") + 
+  ylab("Plastic waste per capita") + 
+  geom_point(data = plastic_waste_f, aes(color=continent)) +
+  geom_smooth(data = plastic_waste_f, color="black")+ theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey"),
+) + scale_color_aaas()
 
-Helpful reference:http://www.sthda.com/english/wiki/ggplot2-themes-and-background-colors-the-3-elements
 
+```
 
 
