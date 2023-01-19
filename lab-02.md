@@ -29,12 +29,12 @@ View(plastic_waste)
 \#Trinidad and Tobago import tons of plastic every year, so it makes
 sense and it’s not data error.
 
-\#It looks like many African countries have less plastic waste per
-capita, one or maybe a few North American countries have a lot plastic
-waste per capita
+\#It looks like many African and Asian countries have less plastic waste
+per capita, one or maybe a few North American countries have a lot
+plastic waste per capita
 
 ``` r
-ggplot(data = plastic_waste, aes(x = plastic_waste_per_cap)) +
+ggplot(data = plastic_waste, aes(x = plastic_waste_per_cap, fill = continent)) +
   geom_histogram(binwidth = 0.2)
 ```
 
